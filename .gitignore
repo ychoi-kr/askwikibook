@@ -1,0 +1,17 @@
+.bashrc
+.cache
+.gitconfig
+.ipython
+.local
+.profile
+.python_history
+.pythonstartup.py
+.viminfo
+.vimrc
+.virtualenvs
+.wget-hsts
+
+README.txt
+databases/
+mysite/__pycache__
+settings/
