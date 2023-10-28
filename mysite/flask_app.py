@@ -51,10 +51,18 @@ def getbooklist(query):
 
     def highlight_title(value):
         return f'⟪{value}⟫'
+
+    def process_column(idx, col):
+        if idx == title_column_index:
+            return highlight_title(col)
+        elif idx == url_column_index:
+            return linkify_column(col)
+        else:
+            return shorten(str(col))
     
     for row in booklist:
         result += "<li>" 
-        result += ', '.join([highlight_title(col) if idx == title_column_index else (linkify_column(col) if idx == url_column_index else shorten(str(col))) for idx, col in enumerate(row)]) 
+        result += ', '.join([process_column(idx, col) for idx, col in enumerate(row)])
         result += "</li>"
 
     result += "</ol>"
