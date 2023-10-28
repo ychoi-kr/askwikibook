@@ -7,6 +7,11 @@ if not os.path.exists(DATABASE_PATH):
     DATABASE_PATH = os.path.join(BASE_DIR, "..", "databases", "books.db")
 
 
+def execute_select_query(query):
+    if not query.upper().startswith("SELECT"):
+        return None
+    return execute_query(query)
+
 def execute_query(query):
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()

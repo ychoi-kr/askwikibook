@@ -43,16 +43,6 @@ def execute_sql():
 
 
 def getbooklist(query):
-    booklist, columns_desc = database.execute_query(query)
-    column_names = [desc[0] for desc in columns_desc]
-    column_indices = {name: index for index, name in enumerate(column_names)}
-    title_column_index = column_indices.get('title')
-    url_column_index = column_indices.get('url')
-    pages_column_index = column_indices.get('pages')
-    price_column_index = column_indices.get('price')
-
-    result = "<ol>"
-
     def linkify_column(value):
         return f'<a href="{value}">{value}</a>' if value else value
 
@@ -77,12 +67,30 @@ def getbooklist(query):
         else:
             return shorten(str(col))
     
-    for row in booklist:
-        result += "<li>" 
-        result += ', '.join([process_column(idx, col) for idx, col in enumerate(row)])
-        result += "</li>"
+    try:
+        booklist, columns_desc = database.execute_select_query(query)
 
-    result += "</ol>"
+        if booklist:
+            column_names = [desc[0] for desc in columns_desc]
+            column_indices = {name: index for index, name in enumerate(column_names)}
+            title_column_index = column_indices.get('title')
+            url_column_index = column_indices.get('url')
+            pages_column_index = column_indices.get('pages')
+            price_column_index = column_indices.get('price')
+
+            result = "<ol>"
+        
+            for row in booklist:
+                result += "<li>" 
+                result += ', '.join([process_column(idx, col) for idx, col in enumerate(row)])
+                result += "</li>"
+        
+            result += "</ol>"
+        else:
+            result = "결과가 없습니다."
+    except:
+        result = "질의에 실패했습니다."
+
     return result
 
 if __name__ == '__main__':
