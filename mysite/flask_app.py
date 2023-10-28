@@ -34,6 +34,7 @@ def getbooklist(query):
     result = '질의: ' + query
     booklist, columns_desc = database.execute_query(query)
     column_names = [desc[0] for desc in columns_desc]
+    title_column_index = column_names.index('title')
     url_column_index = column_names.index('url')
 
     result += '<br><br>결과:<br>'
@@ -48,9 +49,12 @@ def getbooklist(query):
             s = s[:size] + '...'
         return s
 
+    def highlight_title(value):
+        return f'⟪{value}⟫'
+    
     for row in booklist:
-        result += "<li>"
-        result += ', '.join([linkify_column(col) if idx == url_column_index else shorten(str(col)) for idx, col in enumerate(row)])
+        result += "<li>" 
+        result += ', '.join([highlight_title(col) if idx == title_column_index else (linkify_column(col) if idx == url_column_index else shorten(str(col))) for idx, col in enumerate(row)]) 
         result += "</li>"
 
     result += "</ol>"
