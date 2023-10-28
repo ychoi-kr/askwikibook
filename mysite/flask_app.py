@@ -30,8 +30,19 @@ def generateSQL(natural_query):
     return sql
 
 
+@app.route('/generate_sql', methods=['POST'])
+def generate_sql_endpoint():
+    message = request.form.get('message')
+    sql = generateSQL(message)
+    return jsonify({"sql": sql})
+
+@app.route('/execute_sql', methods=['POST'])
+def execute_sql():
+    sql = request.form.get('sql')
+    return jsonify({"result": getbooklist(sql)})
+
+
 def getbooklist(query):
-    result = '질의: ' + query
     booklist, columns_desc = database.execute_query(query)
     column_names = [desc[0] for desc in columns_desc]
     title_column_index = column_names.index('title')
@@ -39,8 +50,7 @@ def getbooklist(query):
     pages_column_index = column_names.index('pages')
     price_column_index = column_names.index('price')
 
-    result += '<br><br>결과:<br>'
-    result += "<ol>"
+    result = "<ol>"
 
     def linkify_column(value):
         return f'<a href="{value}">{value}</a>' if value else value

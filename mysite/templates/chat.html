@@ -34,22 +34,37 @@
     </div>
 
     <script>
-        function sendMessage() {
-            let message = document.getElementById('userInput').value;
-            document.getElementById('chatBox').innerHTML += `<p>You: ${message}</p>`;
-            fetch('/send_message', {
-                method: 'POST',
-                body: new URLSearchParams({ 'message': message }),
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('chatBox').innerHTML += `<p>위키봇: ${data.message}</p>`;
-                document.getElementById('userInput').value = '';
-            });
+function sendMessage() {
+    let message = document.getElementById('userInput').value;
+    document.getElementById('chatBox').innerHTML += `<p>You: ${message}</p>`;
+
+    // SQL 문 생성과 표시
+    fetch('/generate_sql', {
+        method: 'POST',
+        body: new URLSearchParams({ 'message': message }),
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
         }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('chatBox').innerHTML += `<p>위키봇 (SQL): ${data.sql}</p>`;
+
+        // SQL 실행 결과 표시
+        return fetch('/execute_sql', {
+            method: 'POST',
+            body: new URLSearchParams({ 'sql': data.sql }),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('chatBox').innerHTML += `<p>위키봇: ${data.result}</p>`;
+        document.getElementById('userInput').value = '';
+    });
+}
     </script>
 </body>
 </html>
