@@ -1,6 +1,8 @@
 import openai
+import os
 
-openai.api_key_path = "/home/askwikibook/settings/OPENAI_API_KEY"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+openai.api_key_path = os.path.join(BASE_DIR, "..", "settings", "OPENAI_API_KEY")
 
 def generateSQL(schemas, natural_query, dialect="SQLite"):
     messages = [
