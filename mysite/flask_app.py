@@ -36,6 +36,8 @@ def getbooklist(query):
     column_names = [desc[0] for desc in columns_desc]
     title_column_index = column_names.index('title')
     url_column_index = column_names.index('url')
+    pages_column_index = column_names.index('pages')
+    price_column_index = column_names.index('price')
 
     result += '<br><br>결과:<br>'
     result += "<ol>"
@@ -57,6 +59,10 @@ def getbooklist(query):
             return highlight_title(col)
         elif idx == url_column_index:
             return linkify_column(col)
+        elif idx == pages_column_index:
+            return f"{col}쪽"
+        elif idx == price_column_index:
+            return f"{col}원"
         else:
             return shorten(str(col))
     
