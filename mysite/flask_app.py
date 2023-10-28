@@ -45,10 +45,11 @@ def execute_sql():
 def getbooklist(query):
     booklist, columns_desc = database.execute_query(query)
     column_names = [desc[0] for desc in columns_desc]
-    title_column_index = column_names.index('title')
-    url_column_index = column_names.index('url')
-    pages_column_index = column_names.index('pages')
-    price_column_index = column_names.index('price')
+    column_indices = {name: index for index, name in enumerate(column_names)}
+    title_column_index = column_indices.get('title')
+    url_column_index = column_indices.get('url')
+    pages_column_index = column_indices.get('pages')
+    price_column_index = column_indices.get('price')
 
     result = "<ol>"
 
