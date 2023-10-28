@@ -26,3 +26,20 @@ cat > ./settings/OPENAI_API_KEY
 <your key>
 ^D
 ```
+
+5. Install dependencies.
+
+```
+pip install -r requirements
+```
+
+# How to Run
+
+1. Start server.
+
+```
+python mysite/flask_app.py
+```
+
+2. Open <http://127.0.0.1:5000> in a web browser.
+
