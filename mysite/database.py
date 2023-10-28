@@ -1,8 +1,11 @@
 import sqlite3
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATABASE_PATH = os.path.join(BASE_DIR, "..", "databases", "books.db")
+DATABASE_PATH = "/home/askwikibook/databases/books.db"
+if not os.path.exists(DATABASE_PATH):
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    DATABASE_PATH = os.path.join(BASE_DIR, "..", "databases", "books.db")
+
 
 def execute_query(query):
     conn = sqlite3.connect(DATABASE_PATH)
