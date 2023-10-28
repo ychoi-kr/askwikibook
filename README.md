@@ -1,3 +1,7 @@
+This Flask app allows users to query Wikibooks(https://wikibook.co.kr/)' book information in natural language, which is then converted to SQL to query and display the results. 
+
+![screenshot](screenshot.png)
+
 # How to Setup
 
 1. Clone repository.

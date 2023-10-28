@@ -10,6 +10,7 @@
 .vimrc
 .virtualenvs
 .wget-hsts
+.DS_Store
 
 databases/
 mysite/__pycache__
