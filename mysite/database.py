@@ -13,8 +13,7 @@ def execute_query(query):
     cursor.execute(query)
     result = cursor.fetchall()
     conn.close()
-    num_columns = len(cursor.description)
-    return result, num_columns
+    return result, cursor.description
 
 def get_books_schema():
     columns, _ = execute_query("PRAGMA table_info(books);")

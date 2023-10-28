@@ -32,10 +32,15 @@ def generateSQL(natural_query):
 
 def getbooklist(query):
     result = '질의: ' + query
-    booklist, num_columns = database.execute_query(query)
+    booklist, columns_desc = database.execute_query(query)
+    column_names = [desc[0] for desc in columns_desc]
+    url_column_index = column_names.index('url')
 
     result += '<br><br>결과:<br>'
     result += "<ol>"
+
+    def linkify_column(value):
+        return f'<a href="{value}">{value}</a>' if value else value
 
     def shorten(s):
         size = 50
@@ -44,7 +49,9 @@ def getbooklist(query):
         return s
 
     for row in booklist:
-        result += "<li>" + ', '.join([shorten(str(col)) for col in row]) + "</li>"
+        result += "<li>"
+        result += ', '.join([linkify_column(col) if idx == url_column_index else shorten(str(col)) for idx, col in enumerate(row)])
+        result += "</li>"
 
     result += "</ol>"
     return result
