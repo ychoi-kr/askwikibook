@@ -28,7 +28,33 @@ def generateSQL(schemas, natural_query, dialect="SQLite"):
     response_str = completion.choices[0].message.content
     #messages.append({"role": "assistant", "content": response_str})
 
-    return validate_and_correct_sql(response_str, dialect)
+    sql = validate_and_correct_sql(response_str, dialect)
+    sql = add_ean_and_url_columns(sql)
+    return sql
+
+
+def add_ean_and_url_columns(sql_query):
+    """
+    Add the 'ean' and 'url' columns to the SQL SELECT statement if they're not already present. 
+    The resulting columns will be aliased as '_ean' and '_url'.
+    """
+    # Check if the query is a SELECT statement followed by a "FROM BOOKS" clause
+    if re.search(r"FROM\s+BOOKS", sql_query, re.IGNORECASE):
+        # If the query is selecting all columns (*), just pass
+        if re.search(r"SELECT\s+\*\s+FROM", sql_query, re.IGNORECASE):
+            return sql_query
+        
+        # If the query already contains 'ean' and 'url', just pass
+        if re.search(r"\bean\b", sql_query, re.IGNORECASE) and re.search(r"\burl\b", sql_query, re.IGNORECASE):
+            return sql_query
+        
+        # If 'ean' or 'url' are missing, add them with aliases '_ean' and '_url'
+        if not re.search(r"\bean\b", sql_query, re.IGNORECASE):
+            sql_query = re.sub(r"FROM", ", ean AS _ean FROM", sql_query, flags=re.IGNORECASE)
+        if not re.search(r"\burl\b", sql_query, re.IGNORECASE):
+            sql_query = re.sub(r"FROM", ", url AS _url FROM", sql_query, flags=re.IGNORECASE)
+
+    return sql_query
 
 
 def validate_and_correct_sql(sql, dialect="SQLite"):
