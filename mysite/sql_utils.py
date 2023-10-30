@@ -9,6 +9,12 @@ def validate_and_correct_sql(sql, dialect="SQLite"):
                 table_name = table_name_match.group(1)
                 return f"PRAGMA table_info({table_name});"
         
+        # SELECT sql from sqlite_master WHERE type='table' AND name='table_name' 패턴 감지 및 변경
+        sqlite_master_match = re.search(r"SELECT sql from sqlite_master WHERE type='table' AND name='(\w+)'", sql, re.IGNORECASE)
+        if sqlite_master_match:
+            table_name = sqlite_master_match.group(1)
+            return f"PRAGMA table_info({table_name});"
+        
         # SELECT COLUMN_NAME FROM pragma_table_info('table_name') 패턴 감지
         pragma_match = re.search(r"SELECT COLUMN_NAME FROM pragma_table_info\('(\w+)'\);", sql)
         if pragma_match:
