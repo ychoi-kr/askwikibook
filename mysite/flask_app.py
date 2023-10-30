@@ -55,7 +55,11 @@ def execute_sql():
 
 
 def create_html_output(result_data):
-    return "<ol>" + ''.join([f"<li>{', '.join(row['values'])}</li>" for row in result_data["booklist"]]) + "</ol>"
+    list_items = []
+    for row in result_data["booklist"]:
+        joined_values = ', '.join(row['values'])
+        list_items.append(f"<li>{joined_values}</li>")
+    return "<ol>" + ''.join(list_items) + "</ol>"
 
 
 def getbooklist(query):
