@@ -31,7 +31,8 @@ def add_ean_and_url_columns(sql_query):
     """
     # Check if the query contains 'DISTINCT', if so just pass
     if re.search(r"SELECT\s+DISTINCT", sql_query, re.IGNORECASE):
-        return sql_query
+        if not re.search(r"SELECT DISTINCT.+title", sql_query, re.IGNORECASE):
+            return sql_query
     
     # Check if the query is a SELECT statement followed by a "FROM BOOKS" clause
     if re.search(r"FROM\s+BOOKS", sql_query, re.IGNORECASE):
