@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import database
 import llm
+import sql_utils
 
 app = Flask(__name__)
 
@@ -18,14 +19,19 @@ def generateSQL(natural_query):
         sql += " FROM books"
         sql += " WHERE title LIKE '%" + natural_query + "%'"
         sql += " ORDER BY pubdate DESC;"
-    return sql
+    
+    validated_sql = sql_utils.validate_and_correct_sql(sql)
+    enhanced_sql = sql_utils.add_ean_and_url_columns(validated_sql)
+
+    return validated_sql, enhanced_sql
 
 
 @app.route('/generate_sql', methods=['POST'])
 def generate_sql_endpoint():
     message = request.form.get('message')
-    sql = generateSQL(message)
-    return jsonify({"sql": sql})
+    validated_sql, enhanced_sql = generateSQL(message)
+    return jsonify({"sql": enhanced_sql})
+
 
 @app.route('/execute_sql', methods=['POST'])
 def execute_sql():
