@@ -9,14 +9,14 @@ if not os.path.exists(openai.api_key_path):
 
 def generateSQL(schemas, natural_query, dialect="SQLite"):
     messages = [
-        {"role": "system", "content": "You interpret a query in natural language into SQL."},
+        {"role": "system", "content": "You interpret a query in natural language into SQL which retrieve data from 위키북스's database. The company publishes books on IT such like programming, AI, OS."},
     ]
     prompt = "Table(s) in " + dialect + " database:\n"
     for table, schema in schemas.items():
         prompt += table + ':' + schema + '\n'
     prompt += "\n\nMake SQL query doing:\n"
     prompt += natural_query
-    prompt += "\n\nSQL:"
+    prompt += "\n\nIf search keyword has two or more words, consider to split it into multiple keywords.\n\nSQL:"
 
     messages.append({"role": "user", "content": prompt})
 
