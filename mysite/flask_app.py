@@ -39,7 +39,19 @@ def generate_sql_endpoint():
 @app.route('/execute_sql', methods=['POST'])
 def execute_sql():
     sql = request.form.get('sql')
-    return jsonify({"result": getbooklist(sql)})
+    result_data = getbooklist(sql)
+
+    if result_data["status"] == "failure":
+        return jsonify({"result": f"<div class='error'>{result_data['message']}</div>"})
+
+    elif not result_data["booklist"]:
+        return jsonify({"result": f"<div class='no-result'>{result_data['message']}</div>"})
+
+    else:
+        ol_list = "<ol>" + ''.join([f"<li>{', '.join(row['values'])}</li>" for row in result_data["booklist"]]) + "</ol>"
+        result_data["result"] = ol_list
+
+    return jsonify(result_data)
 
 
 def getbooklist(query):
@@ -78,18 +90,32 @@ def getbooklist(query):
             pages_column_index = column_indices.get('pages')
             price_column_index = column_indices.get('price')
 
-            result = "<ol>"
-        
+            processed_list = []
             for row in booklist:
-                result += "<li>" 
-                result += ', '.join([process_column(idx, col) for idx, col in enumerate(row)])
-                result += "</li>"
-        
-            result += "</ol>"
+                processed_row = {
+                    'values': [process_column(idx, col) for idx, col in enumerate(row)]
+                }
+                processed_list.append(processed_row)
+
+            return {
+                "status": "success",
+                "booklist": processed_list,
+                "column_names": column_names
+            }
         else:
-            result = "결과가 없습니다."
+            return {
+                "status": "success",
+                "message": "결과가 없습니다.",
+                "booklist": [],
+                "column_names": []
+            }
     except:
-        result = "질의에 실패했습니다."
+        return {
+            "status": "failure",
+            "message": f"질의에 실패했습니다.",
+            "booklist": [],
+            "column_names": []
+        }
 
     return result
 
