@@ -52,81 +52,71 @@ def execute_sql():
 
 
 def create_html_output(result_data):
+    def linkify_column(value):
+        return f'<a href="{value}">{value}</a>' if value else value
+                
+    def shorten(s, size=50):
+        if len(s) > size:
+            s = s[:size] + '...'
+        return s
+                
+    def highlight_title(value):
+        return f'⟪{value}⟫'
+            
+    column_indices = {name: index for index, name in enumerate(result_data['column_names'])}
+    title_column_index = column_indices.get('title')
+    url_column_index = column_indices.get('url')
+    _url_column_index = column_indices.get('_url')
+    pages_column_index = column_indices.get('pages')
+    price_column_index = column_indices.get('price')
+    ean_index = column_indices.get('ean')
+    _ean_index = column_indices.get('_ean')
+        
     list_items = []
-
-    # EAN 또는 _EAN 및 _URL의 인덱스 찾기
-    ean_index = None
-    url_index = None
-    for idx, col_name in enumerate(result_data['column_names']):
-        if col_name.lower() in ['ean', '_ean']:
-            ean_index = idx
-        elif col_name.lower() in ['url', '_url']:
-            url_index = idx
-
     for row in result_data["booklist"]:
-        values_to_display = row['values'].copy()
-        ean = values_to_display[ean_index]
-        thumbnail_url = f"https://wikibook.co.kr/images/cover/s/{ean}.jpg"
-        thumbnail_html = f'<img src="{thumbnail_url}" alt="Book cover" style="max-width: 50px; margin-right: 10px;">'
-
-        # _url 칼럼과 _ean 칼럼은 목록에서 빼기. 큰 인덱스부터 제거.
-        if result_data['column_names'][url_index] == '_url':
-            values_to_display.pop(url_index)
-        if result_data['column_names'][ean_index] == '_ean':
-            values_to_display.pop(ean_index)
-
-        joined_values = ', '.join(values_to_display)
-        list_items.append(f"<li>{thumbnail_html}{joined_values}</li>")
+        thumbnail_html = ""
+        # If 'ean' is not present, we check '_ean'
+        ean = row[ean_index] if ean_index is not None and row[ean_index] else row[_ean_index] if _ean_index is not None else None
+        # If 'url' is not present, we check '_url'
+        url = row[url_column_index] if url_column_index is not None and row[url_column_index] else row[_url_column_index] if _url_column_index is not None else None
+        
+        if ean:
+            thumbnail_url = f"https://wikibook.co.kr/images/cover/s/{ean}.jpg"
+            thumbnail_html = f'<img src="{thumbnail_url}" alt="Book cover" style="max-width: 50px; margin-right: 10px;">'
+        
+        # Process columns
+        processed_values = []
+        for idx, col in enumerate(row):
+            col_value = ""
+            if idx == title_column_index:
+                col_value = highlight_title(col)
+            elif idx == url_column_index:
+                col_value = linkify_column(col)
+            elif idx == pages_column_index:
+                col_value = f"{col}쪽"
+            elif idx == price_column_index:
+                col_value = f"{col}원"
+            elif idx in [_ean_index, _url_column_index]:  # Skip the enhanced _EAN and _URL values
+                continue
+            else:
+                col_value = shorten(str(col))
+            
+            processed_values.append(col_value)
+        
+        list_items.append('<li>' + thumbnail_html + ', '.join(processed_values) + '</li>')
 
     return "<ol>" + ''.join(list_items) + "</ol>"
 
 
 def getbooklist(query):
-    def linkify_column(value):
-        return f'<a href="{value}">{value}</a>' if value else value
-
-    def shorten(s):
-        size = 50
-        if len(s) > size:
-            s = s[:size] + '...'
-        return s
-
-    def highlight_title(value):
-        return f'⟪{value}⟫'
-
-    def process_column(idx, col):
-        if idx == title_column_index:
-            return highlight_title(col)
-        elif idx == url_column_index:
-            return linkify_column(col)
-        elif idx == pages_column_index:
-            return f"{col}쪽"
-        elif idx == price_column_index:
-            return f"{col}원"
-        else:
-            return shorten(str(col))
-    
     try:
         booklist, columns_desc = database.execute_select_query(query)
 
         if booklist:
             column_names = [desc[0] for desc in columns_desc]
-            column_indices = {name: index for index, name in enumerate(column_names)}
-            title_column_index = column_indices.get('title')
-            url_column_index = column_indices.get('url')
-            pages_column_index = column_indices.get('pages')
-            price_column_index = column_indices.get('price')
-
-            processed_list = []
-            for row in booklist:
-                processed_row = {
-                    'values': [process_column(idx, col) for idx, col in enumerate(row)]
-                }
-                processed_list.append(processed_row)
-
             return {
                 "status": "success",
-                "booklist": processed_list,
+                "booklist": booklist,
                 "column_names": column_names
             }
         else:
@@ -139,7 +129,7 @@ def getbooklist(query):
     except:
         return {
             "status": "failure",
-            "message": f"질의에 실패했습니다.",
+            "message": f"질의에 실패했습니다. {str(e)}",
             "booklist": [],
             "column_names": []
         }
