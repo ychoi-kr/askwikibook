@@ -82,7 +82,10 @@ def create_html_output(result_data):
         
         if ean:
             thumbnail_url = f"https://wikibook.co.kr/images/cover/s/{ean}.jpg"
-            thumbnail_html = f'<img src="{thumbnail_url}" alt="Book cover" style="max-width: 50px; margin-right: 10px;">'
+            if url:
+                thumbnail_html = f'<a href="{url}"><img src="{thumbnail_url}" alt="Book cover" style="max-width: 50px; margin-right: 10px;"></a>'
+            else:
+                thumbnail_html = f'<img src="{thumbnail_url}" alt="Book cover" style="max-width: 50px; margin-right: 10px;">'
         
         # Process columns
         processed_values = []
