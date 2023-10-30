@@ -56,9 +56,25 @@ def execute_sql():
 
 def create_html_output(result_data):
     list_items = []
+
+    # EAN 또는 _EAN의 인덱스 찾기
+    ean_index = None
+    for idx, col_name in enumerate(result_data['column_names']):
+        if col_name.lower() in ['ean', '_ean']:
+            ean_index = idx
+            break
+
     for row in result_data["booklist"]:
+        if ean_index is not None:
+            ean = row['values'][ean_index]
+            thumbnail_url = f"https://wikibook.co.kr/images/cover/s/{ean}.jpg"
+            thumbnail_html = f'<img src="{thumbnail_url}" alt="Book cover" style="max-width: 50px; margin-right: 10px;">'
+        else:
+            thumbnail_html = ""
+
         joined_values = ', '.join(row['values'])
-        list_items.append(f"<li>{joined_values}</li>")
+        list_items.append(f"<li>{thumbnail_html}{joined_values}</li>")
+
     return "<ol>" + ''.join(list_items) + "</ol>"
 
 
