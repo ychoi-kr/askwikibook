@@ -132,7 +132,7 @@ def getbooklist(query):
     except:
         return {
             "status": "failure",
-            "message": f"질의에 실패했습니다. {str(e)}",
+            "message": f"질의에 실패했습니다.",
             "booklist": [],
             "column_names": []
         }
