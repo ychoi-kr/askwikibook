@@ -21,22 +21,22 @@ def generateSQL(natural_query):
         sql += " ORDER BY pubdate DESC;"
     
     validated_sql = sql_utils.validate_and_correct_sql(sql)
-    enhanced_sql = sql_utils.add_ean_and_url_columns(validated_sql)
 
-    return validated_sql, enhanced_sql
+    return validated_sql
 
 
 @app.route('/generate_sql', methods=['POST'])
 def generate_sql_endpoint():
     message = request.form.get('message')
-    validated_sql, enhanced_sql = generateSQL(message)
-    return jsonify({"sql": enhanced_sql})
+    validated_sql = generateSQL(message)
+    return jsonify({"sql": validated_sql})
 
 
 @app.route('/execute_sql', methods=['POST'])
 def execute_sql():
     sql = request.form.get('sql')
-    result_data = getbooklist(sql)
+    enhanced_sql = sql_utils.add_ean_and_url_columns(sql)
+    result_data = getbooklist(enhanced_sql)
 
     if result_data["status"] == "failure":
         return jsonify({"result": f"<div class='error'>{result_data['message']}</div>"})
@@ -54,22 +54,28 @@ def execute_sql():
 def create_html_output(result_data):
     list_items = []
 
-    # EAN 또는 _EAN의 인덱스 찾기
+    # EAN 또는 _EAN 및 _URL의 인덱스 찾기
     ean_index = None
+    url_index = None
     for idx, col_name in enumerate(result_data['column_names']):
         if col_name.lower() in ['ean', '_ean']:
             ean_index = idx
-            break
+        elif col_name.lower() in ['url', '_url']:
+            url_index = idx
 
     for row in result_data["booklist"]:
-        if ean_index is not None:
-            ean = row['values'][ean_index]
-            thumbnail_url = f"https://wikibook.co.kr/images/cover/s/{ean}.jpg"
-            thumbnail_html = f'<img src="{thumbnail_url}" alt="Book cover" style="max-width: 50px; margin-right: 10px;">'
-        else:
-            thumbnail_html = ""
+        values_to_display = row['values'].copy()
+        ean = values_to_display[ean_index]
+        thumbnail_url = f"https://wikibook.co.kr/images/cover/s/{ean}.jpg"
+        thumbnail_html = f'<img src="{thumbnail_url}" alt="Book cover" style="max-width: 50px; margin-right: 10px;">'
 
-        joined_values = ', '.join(row['values'])
+        # _url 칼럼과 _ean 칼럼은 목록에서 빼기. 큰 인덱스부터 제거.
+        if result_data['column_names'][url_index] == '_url':
+            values_to_display.pop(url_index)
+        if result_data['column_names'][ean_index] == '_ean':
+            values_to_display.pop(ean_index)
+
+        joined_values = ', '.join(values_to_display)
         list_items.append(f"<li>{thumbnail_html}{joined_values}</li>")
 
     return "<ol>" + ''.join(list_items) + "</ol>"
