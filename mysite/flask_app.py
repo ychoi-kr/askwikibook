@@ -48,10 +48,14 @@ def execute_sql():
         return jsonify({"result": f"<div class='no-result'>{result_data['message']}</div>"})
 
     else:
-        ol_list = "<ol>" + ''.join([f"<li>{', '.join(row['values'])}</li>" for row in result_data["booklist"]]) + "</ol>"
+        ol_list = create_html_output(result_data)
         result_data["result"] = ol_list
 
     return jsonify(result_data)
+
+
+def create_html_output(result_data):
+    return "<ol>" + ''.join([f"<li>{', '.join(row['values'])}</li>" for row in result_data["booklist"]]) + "</ol>"
 
 
 def getbooklist(query):
