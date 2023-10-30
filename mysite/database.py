@@ -8,7 +8,7 @@ if not os.path.exists(DATABASE_PATH):
 
 
 def execute_select_query(query):
-    if not query.upper().startswith("SELECT"):
+    if not (query.upper().startswith("SELECT") or query.startswith("PRAGMA table_info")):
         return None
     return execute_query(query)
 
