@@ -11,15 +11,6 @@ def index():
     return render_template('chat.html')
 
 
-@app.route('/send_message', methods=['POST'])
-def send_message():
-
-    message = request.form.get('message')
-    sql = generateSQL(message)
-    result = getbooklist(sql)
-    return jsonify({"message": result})
-
-
 def generateSQL(natural_query):
     sql = llm.generateSQL(schemas, natural_query)
     if not sql:
