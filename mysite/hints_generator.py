@@ -26,7 +26,7 @@ INCLUDE_KEYWORDS_HINTS = {
 }
 
 EXCLUDE_KEYWORDS_HINTS = {
-    ("제목", "URL", "가격", "출간일"): "If not specified, consider include title, url, price, and pubdate in SQL query.",
+    ("제목", "URL", "가격", "출간일"): "If not specified, consider include title, url, author, translator, price, pubdate and intro_book in SQL query.",
     ("구간", "부터", "순서", "순으로", "옛날", "오래된", "정렬"): "Unless otherwise specified, it sorts in reverse order of pubdate.",
     (" 다 ", "다알려줘", "다찾아", "모두", "모든", "싹다", "싹 다", "전부", "하나도 빼놓지 말고"): "Unless otherwise specified, it limits to 10.",
 }
