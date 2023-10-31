@@ -15,7 +15,7 @@ def generateSQL(schemas, natural_query, dialect="SQLite"):
     user_prompt += "A good place to look for a product or service name is in the title or book_intro.\n"
     user_prompt += get_more_hints(natural_query)
 
-    user_prompt += "\nSQL:"
+    user_prompt += "\n\nSQL:"
     print(user_prompt)
 
     response_str = chat_with_openai(system_prompt, user_prompt)
