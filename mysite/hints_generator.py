@@ -7,9 +7,7 @@ INCLUDE_KEYWORDS_HINTS = {
     ("PyTorch", "pytorch", "파이썬", "파이토치", "포토샵", "포토숍"): "A good place to look for a product or service name is in the title or book_intro.",
     ("신간",): 'In Korean, the word "신간" means "new book", it\'s better to leave it out of the keywords and search for a date range for the pubdate, such as within three months.',
     ("비싼", "재미있는", "재밌는", "저렴한", "좋은"): "Words that describe the character of a book may not be keywords.",
-    ("자바", "Java", "java"): "When using Java as a keyword, it's a good idea to exclude JavaScript.",
     ("c++",): 'You can also get good results by searching for "C++" as well as "c++".',
-    ("Java",): 'You can also get good results by searching for "자바" or "java" as well as "Java".',
     ("파이선",): 'Respect the user\'s input and search for "파이선", but also search for "파이썬" to account for the widespread Korean notation. Looking for it in the title and intro_book should yield good results.',
     ("파이싼",): 'Respect the user\'s input and search for "파이싼", but also search for "파이썬" to account for the widespread Korean notation. Looking for it in the title and intro_book should yield good results.',
     ("퓌톤",): 'Respect the user\'s input and search for "퓌톤", but also search for "파이썬" to account for the widespread Korean notation. Looking for it in the title and intro_book should yield good results.',
@@ -52,5 +50,8 @@ def get_hints(natural_query):
 
     if contains_any(natural_query, ["교수", "근무", "대학교", "박사", "석사", "재직", "졸업", "출신"]) or re.search(r"대\b", natural_query):
         hints.append("Organization name can also be found in intro_author.")
+
+    if contains_any(natural_query, ["자바", "Java", "java"]) and not contains_any(natural_query, ["스크립트", "Script", "script"]):
+        hints.append('When using Java as a keyword, it\'s a good idea to exclude JavaScript. You can also get good results by searching for "자바" or "java" as well as "Java".')
 
     return '\n'.join(hints) 
