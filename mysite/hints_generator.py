@@ -13,6 +13,7 @@ INCLUDE_KEYWORDS_HINTS = {
     ("웹개발",): 'You might want to search for the keywords "웹" and "개발" to account for the missing spaces.',
     ("주식거래",): 'You might want to search for the keywords "주식" and "거래" to account for the missing spaces.',
     ("프론트엔드",): 'Respect your users\' needs and search for "프론트엔드" (using the Hangul letter "론"), but also search for the keyword "프런트엔드" (using the Hangul letter "런") to account for Hangul notation.',
+    ("관련 책", "시리즈"): 'When searching for a series, we recommend using a LIKE search.',
 }
 
 EXCLUDE_KEYWORDS_HINTS = {
