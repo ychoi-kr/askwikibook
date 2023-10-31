@@ -27,6 +27,7 @@ INCLUDE_KEYWORDS_HINTS = {
     ("트랜스메이트",): 'To find "트랜스메이트", search for translator.',
     ("봄", "여름", "가을", "겨울", "올해", "작년", "내년", "후년", "오늘", "어제", "엊그제", "내일", "이번", "지난",): 'For queries about timing, search by date range. Today is ' + str(date.today()),
     ("nft",): 'You might want to search for "NFT" in all caps in the title, toc, and intro_books.',
+    ("JavaScript", "자바스크립트",): 'If the user didn\'t specify to search in the title, you can also search for "자바스크립트" in intro_book.',
 }
 
 EXCLUDE_KEYWORDS_HINTS = {
@@ -53,7 +54,10 @@ def get_hints(natural_query):
     if contains_any(natural_query, ["교수", "근무", "대학교", "박사", "석사", "재직", "졸업", "출신"]) or re.search(r"대\b", natural_query):
         hints.append("Organization name can also be found in intro_author.")
 
-    if contains_any(natural_query, ["자바", "Java", "java"]) and not contains_any(natural_query, ["스크립트", "Script", "script"]):
-        hints.append('When using Java as a keyword, it\'s a good idea to exclude JavaScript. You can also get good results by searching for "자바" or "java" as well as "Java".')
+    if contains_any(natural_query, ["자바", "java"]) and not contains_any(natural_query, ["스크립트", "Script", "script"]):
+        hints.append('When using "자바" as a keyword, it\'s a good idea to exclude "자바스크립트".')
+
+    if contains_any(natural_query, ["Java"]) and not contains_any(natural_query, ["스크립트", "Script", "script"]):
+        hints.append('When using "Java" as a keyword, it\'s a good idea to exclude "자바스크립트". You can also get good results by searching for "자바" or "java" as well as "Java".')
 
     return '\n'.join(hints) 
