@@ -4,7 +4,7 @@ from datetime import date
 from string_utils import contains_any
 
 INCLUDE_KEYWORDS_HINTS = {
-    ("PyTorch", "pytorch", "파이썬", "파이토치", "포토샵", "포토숍"): "A good place to look for a product or service name is in the title or book_intro.",
+    ("ChatGPT", "IoT", "NFT", "PyTorch", "pytorch", "메타버스", "블록체인", "비트코인", "솔리디티", "스마트 컨트랙트", "스프링", "웹3.0", "이더리움", "챗GPT", "챗gpt", "카프카", "파이썬", "파이토치", "포토샵", "포토숍", "프론트엔드"): "A good place to look for a product or service name is in the title, toc or book_intro.",
     ("신간",): 'In Korean, the word "신간" means "new book", it\'s better to leave it out of the keywords and search for a date range for the pubdate, such as within three months.',
     ("비싼", "재미있는", "재밌는", "저렴한", "좋은"): "Words that describe the character of a book may not be keywords.",
     ("c++",): 'You can also get good results by searching for "C++" as well as "c++".',
@@ -26,16 +26,18 @@ INCLUDE_KEYWORDS_HINTS = {
     ("컴퓨터비전",): 'You can also get good results by searching for "컴퓨터 비전" as well as "컴퓨터비전".',
     ("트랜스메이트",): 'To find "트랜스메이트", search for translator.',
     ("봄", "여름", "가을", "겨울", "올해", "작년", "내년", "후년", "오늘", "어제", "엊그제", "내일", "이번", "지난",): 'For queries about timing, search by date range. Today is ' + str(date.today()),
+    ("nft",): 'You might want to search for "NFT" in all caps in the title, toc, and intro_books.',
 }
 
 EXCLUDE_KEYWORDS_HINTS = {
-    ("제목", "URL", "가격", "출간일"): "If not specified, consider include title, url, author, translator, price, pubdate and intro_book in SQL query.",
     ("구간", "년 초", "년초", "부터", "순서", "순으로", "연초", "옛날", "오래된", "정렬", "처음"): "Unless otherwise specified, it sorts in reverse order of pubdate.",
     (" 다 ", "다알려줘", "다찾아", "모두", "모든", "싹다", "싹 다", "전부", "처음", "하나도 빼놓지 말고"): "Unless otherwise specified, it limits to 10.",
 }
 
 def get_hints(natural_query):
     hints = []
+
+    hints.append("If the query is about an individual book and the user hasn't specified which fields to show, consider include title, url, author, translator, price, pubdate and intro_book in SQL query.")
 
     for keywords, message in INCLUDE_KEYWORDS_HINTS.items():
         if contains_any(natural_query, keywords):
