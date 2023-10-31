@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import database
-import llm
+import sql_generator
 import sql_utils
 
 app = Flask(__name__)
@@ -13,7 +13,7 @@ def index():
 
 
 def generateSQL(natural_query):
-    sql = llm.generateSQL(schemas, natural_query)
+    sql = sql_generator.generateSQL(schemas, natural_query)
     if not sql:
         sql = "SELECT isbn, title, author, pubdate, url"
         sql += " FROM books"
