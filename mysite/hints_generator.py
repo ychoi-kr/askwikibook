@@ -2,7 +2,7 @@ import re
 from string_utils import contains_any
 
 INCLUDE_KEYWORDS_HINTS = {
-    ("PyTorch", "pytorch", "파이토치", "포토샵", "포토숍"): "A good place to look for a product or service name is in the title or book_intro.",
+    ("PyTorch", "pytorch", "파이썬", "파이토치", "포토샵", "포토숍"): "A good place to look for a product or service name is in the title or book_intro.",
     ("신간",): 'In Korean, the word "신간" means "new book", it\'s better to leave it out of the keywords and search for a date range for the pubdate, such as within three months.',
     ("비싼", "재미있는", "재밌는", "저렴한", "좋은"): "Words that describe the character of a book may not be keywords.",
     ("자바", "Java", "java"): "When using Java as a keyword, it's a good idea to exclude JavaScript.",
@@ -29,8 +29,8 @@ INCLUDE_KEYWORDS_HINTS = {
 
 EXCLUDE_KEYWORDS_HINTS = {
     ("제목", "URL", "가격", "출간일"): "If not specified, consider include title, url, author, translator, price, pubdate and intro_book in SQL query.",
-    ("구간", "부터", "순서", "순으로", "옛날", "오래된", "정렬"): "Unless otherwise specified, it sorts in reverse order of pubdate.",
-    (" 다 ", "다알려줘", "다찾아", "모두", "모든", "싹다", "싹 다", "전부", "하나도 빼놓지 말고"): "Unless otherwise specified, it limits to 10.",
+    ("구간", "년 초", "년초", "부터", "순서", "순으로", "연초", "옛날", "오래된", "정렬", "처음"): "Unless otherwise specified, it sorts in reverse order of pubdate.",
+    (" 다 ", "다알려줘", "다찾아", "모두", "모든", "싹다", "싹 다", "전부", "처음", "하나도 빼놓지 말고"): "Unless otherwise specified, it limits to 10.",
 }
 
 def get_hints(natural_query):
