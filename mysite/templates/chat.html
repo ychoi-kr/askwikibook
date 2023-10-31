@@ -52,7 +52,6 @@
     }
 }
 
-
 button {
     padding: 0.2em 0.5em;
     font-size: 16px;
@@ -60,6 +59,23 @@ button {
     height: 80%; /* 입력 영역의 높이와 맞춤 */
     box-sizing: border-box; /* 패딩을 포함한 전체 크기가 80px이 되도록 */
 }
+
+/* 사용자의 채팅 배경색 */
+.user-chat {
+    background-color: #ffffff;  /* 흰색 */
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+/* 챗봇의 채팅 배경색 */
+.bot-chat {
+    background-color: #f0f0f0;  /* 옅은 회색 배경 */
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
     </style>
     <script>
         let vh = window.innerHeight * 0.01;
@@ -68,7 +84,7 @@ button {
 </head>
 <body>
     <div id="chatBox">
-        <p>위키봇: 안녕하세요! 저는 위키북스의 책을 찾아드리는 위키봇이에요. 어떤 책을 찾고 계신가요?</p>
+        <p class="bot-chat">위키봇: 안녕하세요! 저는 위키북스의 책을 찾아드리는 위키봇이에요. 어떤 책을 찾고 계신가요?</p>
     </div>
     <div id="inputArea">
         <input type="text" id="userInput">
@@ -78,7 +94,7 @@ button {
     <script>
 function sendMessage() {
     let message = document.getElementById('userInput').value;
-    document.getElementById('chatBox').innerHTML += `<p>You: ${message}</p>`;
+    document.getElementById('chatBox').innerHTML += `<p class="user-chat">You: ${message}</p>`;
 
     // SQL 문 생성과 표시
     fetch('/generate_sql', {
@@ -90,7 +106,7 @@ function sendMessage() {
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById('chatBox').innerHTML += `<p>위키봇 (SQL): ${data.sql}</p>`;
+        document.getElementById('chatBox').innerHTML += `<p class="bot-chat">위키봇 (SQL): ${data.sql}</p>`;
 
         // SQL 실행 결과 표시
         return fetch('/execute_sql', {
@@ -103,7 +119,13 @@ function sendMessage() {
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById('chatBox').innerHTML += `<p>위키봇: ${data.result}</p>`;
+        document.getElementById('chatBox').innerHTML += `
+        <div class="bot-chat">
+            위키봇:
+            ${data.result}
+        </div>
+        `;
+
         document.getElementById('userInput').value = '';
     });
 }
