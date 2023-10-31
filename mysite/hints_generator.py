@@ -9,6 +9,7 @@ INCLUDE_KEYWORDS_HINTS = {
     ("c++",): 'You can also get good results by searching for "C++" as well as "c++".',
     ("Java",): 'You can also get good results by searching for "자바" or "java" as well as "Java".',
     ("파이선",): 'Respect the user\'s input and search for "파이선", but also search for "파이썬" to account for the widespread Korean notation. Looking for it in the title and intro_book should yield good results.',
+    ("파이싼",): 'Respect the user\'s input and search for "파이싼", but also search for "파이썬" to account for the widespread Korean notation. Looking for it in the title and intro_book should yield good results.',
     ("퓌톤",): 'Respect the user\'s input and search for "퓌톤", but also search for "파이썬" to account for the widespread Korean notation. Looking for it in the title and intro_book should yield good results.',
     ("프로그래밍",): 'If the user didn\'t specify that they wanted to search for the string "프로그래밍", you might want to try searching for "개발" as well.',
     ("앱개발",): 'You might want to search for the keywords "앱" and "개발" to account for the missing spaces.',
@@ -23,6 +24,7 @@ INCLUDE_KEYWORDS_HINTS = {
     ("기계학습",): 'You can also get good results by searching for "머신러닝" as well as "기계학습".',
     ("심층학습",): 'You can also get good results by searching for "딥러닝" as well as "심층학습".',
     ("컴퓨터비전",): 'You can also get good results by searching for "컴퓨터 비전" as well as "컴퓨터비전".',
+    ("트랜스메이트",): 'To find "트랜스메이트", search for translator.'
 }
 
 EXCLUDE_KEYWORDS_HINTS = {
