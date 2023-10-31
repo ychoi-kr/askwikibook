@@ -40,6 +40,12 @@ def add_ean_and_url_columns(sql_query):
     Add the 'ean' and 'url' columns to the SQL SELECT statement if they're not already present. 
     The resulting columns will be aliased as '_ean' and '_url'.
     """
+
+    # Specific query pattern for series list: Do not add for this specific pattern
+    series_list_query_pattern = r"^\s*SELECT\s+series\s+FROM\s+books\s+GROUP\s+BY\s+series"
+    if re.match(series_list_query_pattern, sql_query, re.IGNORECASE):
+        return sql_query
+
     # Check if the query contains 'DISTINCT', if so just pass
     if re.search(r"SELECT\s+DISTINCT", sql_query, re.IGNORECASE):
         if not re.search(r"SELECT DISTINCT.+title", sql_query, re.IGNORECASE):
