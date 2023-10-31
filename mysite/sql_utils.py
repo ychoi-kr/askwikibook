@@ -22,7 +22,7 @@ def validate_and_correct_sql(sql, dialect="SQLite"):
             return f"PRAGMA table_info({table_name});"
 
         # LIMIT 절의 위치를 올바르게 조정하는 코드 추가
-        if re.search(r"LIMIT \d+ ORDER BY", sql, re.IGNORECASE):
+        if re.search(r"LIMIT \d+\s*ORDER BY", sql, re.IGNORECASE):
             # LIMIT 부분을 추출
             limit_match = re.search(r"LIMIT (\d+)", sql, re.IGNORECASE)
             if limit_match:
