@@ -24,6 +24,8 @@ INCLUDE_KEYWORDS_HINTS = {
     ("기계학습",): 'You can also get good results by searching for "머신러닝" as well as "기계학습".',
     ("심층학습",): 'You can also get good results by searching for "딥러닝" as well as "심층학습".',
     ("컴퓨터비전",): 'You can also get good results by searching for "컴퓨터 비전" as well as "컴퓨터비전".',
+    ("ChatGPT", "chatgpt",): 'You can also get good results by searching for "챗GPT" as well as "ChatGPT".',
+    ("챗지피티",): 'You can also get good results by searching for "챗GPT" as well as "챗지피티".',
     ("트랜스메이트",): 'To find "트랜스메이트", search for translator.',
     ("봄", "여름", "가을", "겨울", "올해", "작년", "내년", "후년", "오늘", "어제", "엊그제", "내일", "이번", "지난",): 'For queries about timing, search by date range. Today is ' + str(date.today()),
     ("nft",): 'You might want to search for "NFT" in all caps in the title, toc, and intro_books.',
