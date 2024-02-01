@@ -6,6 +6,7 @@ from string_utils import contains_any
 INCLUDE_KEYWORDS_HINTS = {
     ("ChatGPT", "IoT", "NFT", "PyTorch", "pytorch", "메타버스", "블록체인", "비트코인", "솔리디티", "스마트 컨트랙트", "스프링", "웹3.0", "이더리움", "챗GPT", "챗gpt", "카프카", "파이썬", "파이토치", "포토샵", "포토숍", "프론트엔드"): "A good place to look for a product or service name is in the title, toc or book_intro.",
     ("신간",): 'In Korean, the word "신간" means "new book", it\'s better to leave it out of the keywords and search for a date range for the pubdate, such as within three months.',
+    ("국내서",): 'You can find 국내서 by using `translator = ""` in WHERE clause.',
     ("비싼", "재미있는", "재밌는", "저렴한", "좋은"): "Words that describe the character of a book may not be keywords.",
     ("c++",): 'You can also get good results by searching for "C++" as well as "c++".',
     ("파이선",): 'Respect the user\'s input and search for "파이선", but also search for "파이썬" to account for the widespread Korean notation. Looking for it in the title and intro_book should yield good results.',
