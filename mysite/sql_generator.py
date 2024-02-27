@@ -4,6 +4,7 @@ from hints_generator import get_hints
 def generateSQL(schemas, natural_query, dialect="SQLite"):
     system_prompt = "You interpret a query in natural language into SQL which retrieve data from 위키북스's database. "
     system_prompt += "The company publishes books on IT such like programming, AI, OS. "
+    system_prompt += "Answer SQL statement only without explanation or markup."
     
     user_prompt = "Table(s) in " + dialect + " database:\n"
     for table, schema in schemas.items():
@@ -18,6 +19,7 @@ def generateSQL(schemas, natural_query, dialect="SQLite"):
     print(user_prompt)
 
     response_str = chat_with_openai(system_prompt, user_prompt)
+    response_str = response_str.replace("\n", " ")
     print(response_str)
 
     return response_str
