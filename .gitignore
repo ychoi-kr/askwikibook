@@ -14,4 +14,4 @@
 
 databases/
 mysite/__pycache__
-settings/
+.secret
