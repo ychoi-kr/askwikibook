@@ -15,7 +15,7 @@ def index():
 def generateSQL(natural_query):
     sql = sql_generator.generateSQL(schemas, natural_query)
     if not sql:
-        sql = "SELECT isbn, title, author, pubdate, url"
+        sql = "SELECT isbn, title, subtitle, author, pubdate, url"
         sql += " FROM books"
         sql += " WHERE title LIKE '%" + natural_query + "%'"
         sql += " ORDER BY pubdate DESC;"
@@ -65,6 +65,7 @@ def create_html_output(result_data):
             
     column_indices = {name: index for index, name in enumerate(result_data['column_names'])}
     title_column_index = column_indices.get('title')
+    subtitle_column_index = column_indices.get('subtitle')
     url_column_index = column_indices.get('url')
     _url_column_index = column_indices.get('_url')
     pages_column_index = column_indices.get('pages')
@@ -89,10 +90,14 @@ def create_html_output(result_data):
         
         # Process columns
         processed_values = []
+        title = None
+        subtitle = None
         for idx, col in enumerate(row):
             col_value = ""
             if idx == title_column_index:
-                col_value = highlight_title(col)
+                col_value = title = str(col)
+            elif idx == subtitle_column_index:
+                col_value = subtitle = str(col)
             elif idx == url_column_index:
                 col_value = linkify_column(col)
             elif idx == pages_column_index:
@@ -105,6 +110,12 @@ def create_html_output(result_data):
                 col_value = shorten(str(col))
             
             processed_values.append(col_value)
+
+        if title and subtitle:
+            title_and_subtitle = highlight_title(f"{title}: {subtitle}")
+            processed_values.remove(title)
+            processed_values.remove(subtitle)
+            processed_values = [title_and_subtitle] + processed_values
         
         list_items.append('<li>' + thumbnail_html + ', '.join(processed_values) + '</li>')
 
