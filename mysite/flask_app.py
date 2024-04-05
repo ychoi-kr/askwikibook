@@ -19,7 +19,7 @@ def generateSQL(natural_query):
         sql += " FROM books"
         sql += " WHERE title LIKE '%" + natural_query + "%'"
         sql += " ORDER BY pubdate DESC;"
-    
+
     validated_sql = sql_utils.validate_and_correct_sql(sql)
 
     return validated_sql
@@ -54,15 +54,15 @@ def execute_sql():
 def create_html_output(result_data):
     def linkify_column(value):
         return f'<a href="{value}">{value}</a>' if value else value
-                
+
     def shorten(s, size=50):
         if len(s) > size:
             s = s[:size] + '...'
         return s
-                
+
     def highlight_title(value):
         return f'⟪{value}⟫'
-            
+
     column_indices = {name: index for index, name in enumerate(result_data['column_names'])}
     title_column_index = column_indices.get('title')
     subtitle_column_index = column_indices.get('subtitle')
@@ -72,7 +72,8 @@ def create_html_output(result_data):
     price_column_index = column_indices.get('price')
     ean_index = column_indices.get('ean')
     _ean_index = column_indices.get('_ean')
-        
+    toc_column_index = column_indices.get('toc')
+
     list_items = []
     for row in result_data["booklist"]:
         thumbnail_html = ""
@@ -80,14 +81,14 @@ def create_html_output(result_data):
         ean = row[ean_index] if ean_index is not None and row[ean_index] else row[_ean_index] if _ean_index is not None else None
         # If 'url' is not present, we check '_url'
         url = row[url_column_index] if url_column_index is not None and row[url_column_index] else row[_url_column_index] if _url_column_index is not None else None
-        
+
         if ean:
             thumbnail_url = f"https://wikibook.co.kr/images/cover/s/{ean}.jpg"
             if url:
                 thumbnail_html = f'<a href="{url}"><img src="{thumbnail_url}" alt="Book cover" style="max-width: 50px; margin-right: 10px;"></a>'
             else:
                 thumbnail_html = f'<img src="{thumbnail_url}" alt="Book cover" style="max-width: 50px; margin-right: 10px;">'
-        
+
         # Process columns
         processed_values = []
         title = None
@@ -106,9 +107,11 @@ def create_html_output(result_data):
                 col_value = f"{col}원"
             elif idx in [_ean_index, _url_column_index]:  # Skip the enhanced _EAN and _URL values
                 continue
+            elif idx == toc_column_index:
+                col_value = str(col)
             else:
                 col_value = shorten(str(col))
-            
+
             processed_values.append(col_value)
 
         if title and subtitle:
@@ -116,7 +119,7 @@ def create_html_output(result_data):
             processed_values.remove(title)
             processed_values.remove(subtitle)
             processed_values = [title_and_subtitle] + processed_values
-        
+
         list_items.append('<li>' + thumbnail_html + ', '.join(processed_values) + '</li>')
 
     return "<ol>" + ''.join(list_items) + "</ol>"
